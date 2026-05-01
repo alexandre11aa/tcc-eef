@@ -1,0 +1,99 @@
+% CONFIGURAÇÕES ----------------------------------------------------------
+
+\documentclass{article}
+
+% Configuração do idioma
+\usepackage[portuguese]{babel}
+
+% Configuração do tamanho da página e margens
+\usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Definir a fonte Times New Roman
+\usepackage{times}
+
+% Definir espaçamento entre linhas para 1,5
+\usepackage{setspace}
+\onehalfspacing
+
+% Citações no formato autor-data
+\usepackage{natbib}
+
+% Pacotes úteis
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{multirow}
+
+% Numeração das páginas
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+% Configuração para exibir código de programação
+\usepackage{comment}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+  language=Python,                     % escolha da linguagem
+  basicstyle=\ttfamily\fontsize{6.5}{6}\selectfont,   % tamanho da fonte e família da fonte
+  keywordstyle=\color{blue},           % cor das palavras-chave
+  stringstyle=\color{red},             % cor das strings
+  commentstyle=\color{gray},           % cor dos comentários
+  morecomment=[l][\color{magenta}]{\#},% cor dos comentários com #
+  showstringspaces=false,              % não mostrar espaços em branco nas strings
+  numbers=left,                        % números de linha à esquerda
+  numberstyle=\tiny\color{gray},       % estilo dos números de linha
+  backgroundcolor=\color{white},       % cor de fundo
+  frame=single,                        % moldura ao redor do código
+  xleftmargin=0.05\textwidth,          % margem esquerda para centralizar
+  xrightmargin=0.05\textwidth,         % margem direita para centralizar
+  captionpos=b                         % título abaixo do código
+}
+
+% FOLHA DE ROSTO ---------------------------------------------------------
+
+% ------- Título
+\title{PROLOSS: UMA FERRAMENTA PARA O CÁLCULO DE PERDA DE PROTENSÃO}
+\author{Alexandre Estrela de Lacerda Nobrega}
+
+\begin{document}                       % Iniciar documento
+\pagenumbering{gobble}                 % Desativar a numeração de páginas
+\maketitle
+
+% ------- Resumo
+\input{chapters/1_resumo.tex}
+
+\vspace{0.3cm}
+
+% ------- Abstract
+\input{chapters/2_abstract.tex}
+
+\newpage
+\pagenumbering{arabic}                 % Retomar a numeração de páginas
+\setcounter{page}{2}
+
+% CORPO DO TEXTO ---------------------------------------------------------
+
+% ------- Introdução
+\input{chapters/3_introducao.tex}
+
+% ------- Referencial Teórico
+\input{chapters/4_referencial_teorico.tex}
+
+% ------- Metodologia
+\input{chapters/5_metodologia.tex}
+
+% ------- Resultados
+\input{chapters/6_resultados.tex}
+
+% ------- Conclusão
+\input{chapters/7_conclusao.tex}
+
+% ------- Referências
+\newpage
+\bibliographystyle{plainnat}
+\bibliography{sample}
+
+\end{document}                         % Finalizar documento

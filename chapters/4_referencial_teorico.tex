@@ -1,0 +1,145 @@
+\section{Referencial Teórico}
+
+\hspace{0.4cm}Nesta seção serão explorados os assuntos abordados e passos que levaram ao desenvolvimento da ferramenta computacional.
+
+\subsection{Tipos de perda de protensão}
+
+\hspace{0.4cm}Compreende-se que em um projeto de CP deve-se prever as perdas de força de protensão, que ocorrem tanto nas peças pré-tracionadas como nas pós-tracionadas, sendo elas iniciais, imediatas e progressivas (NBR 6118:2023 (\citeyear{NOAB}). Trovarelli (\citeyear{TRO}) caracteriza a pré-tração pela 
+aplicação de tensão nos cabos de aço após da concretagem da peça, já a pós-tração é definida por Machado (\citeyear{MAC}) como essa mesma aplicação, só que aplicada antes da concretagem da peça.
+
+\subsection{Perdas de protensão imediatas}
+
+\hspace{0.4cm}Em relação as perdas imediatas a NBR 6118:2023 (\citeyear{NOAB}) entende que a variação da força de protensão em elementos estruturais pré-tracionados, devido à aplicação da protensão no concreto e ao seu encurtamento, deve ser calculada no regime elástico, levando em conta a deformação da seção homogeneizada. 
+
+Já para os elementos pós-tracionados, nos sistemas usuais de protensão as perdas imediatas podem ser devido ao atrito entre as armaduras e as bainhas ou o concreto, ao deslizamento da armadura e acomodação na ancoragem e ao encurtamento imediato do concreto (NBR 6118:2023 (\citeyear{NOAB}).
+
+\subsubsection{Perdas de protensão por atrito através de processo simplificado}
+
+\hspace{0.4cm}A perda de protensão por atrito ocorre nos elementos com pós-tração e pode ser determinada pela Equação 1, conforme explica a NBR 6118:2023 (\citeyear{NOAB}).\bigskip
+
+\begin{equation}
+\Delta P_{(x)} = P_i [1 - e^{-(\mu \Sigma \alpha + kx)}]
+\end{equation}\bigskip
+
+Onde $P_i$ é a força aplicada pelo aparelho tensor na posição $x = 0$ (ancoragem ativa), $x$ é a abscissa do ponto onde se calcula $\Delta P$, medida a partir da ancoragem em metros, $\Sigma \alpha$ é o coeficiente de atrito entre o cabo e a bainha, e $k$ é o coeficiente de perda por metro provocada por curvaturas não intencionais do cabo.
+
+No desenvolvimento da ferramenta, o algoritmo de cálculo da perda por atrito foi programado através do método simplificado. Conforme explicam Cholfe e Bonilha (\citeyear{CB}), em vigas e lajes protendidas com cabos com traçados parabólicos, a variação angular entre dois pontos pode ser calculada dessa forma, acelerando os cálculos dentro de uma precisão aceitável e compatível com a maneira de apresentação dos projetos. Nesse caso, o desvio angular pode ser obtido através da Equação 2, que se segue.\bigskip
+
+\begin{equation}
+\Sigma \alpha = \frac{\Sigma^n_{i=1} (2 \cdot \Delta Y_i)}{l_i} 
+\end{equation}\bigskip
+
+Onde $\Sigma \alpha$ é o desvio angular em radianos, $n$ é o número de trechos, $l_1$ é o comprimento de cada trecho e $\Delta y_i$ é a variação das ordenadas. 
+
+\subsubsection{Perdas de protensão por acomodação da ancoragem}
+
+\hspace{0.4cm}Para as perdas por deslizamento da armadura na ancoragem e acomodação da ancoragem, a NBR 6118:2023 (\citeyear{NOAB}) recomenda que sejam determinadas experimentalmente, ou considerados os valores ditados pelos fabricantes. Sabendo disso, Cholfe e Bonilha (\citeyear{CB}) descrevem um método de cálculo que pode ser feito desde que se possua o valor do deslocamento da extremidade do cabo após a transferência da força de protensão para o cabo, que é justamente determinado de maneira experimental, fornecido em catálogos técnicos e normalmente variam de 2 a 6 milímetros.
+
+Entendendo isso, têm-se a Equação 3 apresentada por Cholfe e Bonilha (\citeyear{CB}), que permite determinar o valor da abscissa do ponto de equilíbrio do cabo protendido, e assim encontrar a perda de protensão por acomodação da ancoragem.\bigskip
+
+\begin{equation}
+\Omega = \Delta w \cdot E_p \cdot A_p 
+\end{equation}\bigskip
+
+Onde $\Omega$ é área do diagrama das forças perdidas, $\Delta w$ é a acomodação de ancoragem e $E_p \cdot A_p$ é a rigidez axial do cabo (tração). Toda sua dedução e especificidades foram implementadas na ferramenta computacional.
+
+\subsubsection{Perdas de protensão por encurtamento imediato do concreto}
+
+\hspace{0.4cm}Para as perdas de protensão por encurtamento imediato do concreto, a NBR 6118:2023 (\citeyear{NOAB}) explica que a deformação imediata e afrouxamento dos cabos protendidos ocorrem com a protensão sucessiva dos $n$ grupos de cabos protendidos simultaneamente. Esse processo resulta na perda média de protensão por cabo, que pode ser calculada e foi implementada na ferramenta através da Equação 4.\bigskip
+
+\begin{equation}
+\Delta \sigma_p = \alpha_p (t) \cdot \frac{n - 1}{2n} \cdot \sigma_{cp0g}
+\end{equation}\bigskip
+
+Onde $\Delta \sigma_p$ é a perda média de protensão por encurtamento imediato do concreto, $\alpha_p (t)$ é a relação entre os módulos de deformação do aço e do concreto, $n$ é o numero de cabos protendidos sucessivos um a um e $\sigma_{cp0g}$ tensão no concreto adjacente ao cabo resultante, provocada pelo efeito conjunto da protensão (compressão) após todas as perdas imediatas, e pelo efeito da carga permanente (tração) mobilizada no instante $t_0$, sendo positiva se de compressão, onde sua dedução pode ser obtida a partir da Equação 5.\bigskip
+
+\begin{equation}
+\sigma_{cp0g} = \sigma_{cp} + \sigma_{cg}
+\end{equation}\bigskip
+
+Onde $\sigma_{cp}$ é a tensão no concreto devido a protensão simultânea nos $n$ cabos, e $\sigma_{cg}$ é a tensão no concreto devido à ação das cargas permanentes mobilizadas pela protensão.  
+
+\subsection{Perdas de protensão progressivas}
+
+\hspace{0.4cm}Cholfe e Bonilha (\citeyear{CB}) explicam que existe diminuição da força de protensão ao longo da vida útil da estrutura, e é preciso calcular essa redução de força para garantir que mesmo com ela, os diversos estados limites continuem sendo atendidos. Eles complementam que essa diminuição está relacionada ao comportamento do concreto e do aço como materiais estruturais, que sofrem de fluência e retração quando tensionados de forma permanente. A NBR 6118:2023 (\citeyear{NOAB}) define que essas perdas de protensão decorrentes dessas causas devem ser determinadas a partir de suas interações.  
+\subsubsection{Parâmetros auxiliares de cálculo}
+
+\hspace{0.4cm}Como dito por Cholfe e Bonilha (\citeyear{CB}), foi exigido dos pesquisadores padronizações nos cálculos para uma maior explicabilidade de seus processos, dado o alto número de variáveis de controle do concreto como material estrutural. Com isso, resultados experimentais podem ser aplicados a concretos e seções transversais de qualquer tipo. Um desses cálculos trata da espessura fictícia do concreto, em que a NBR 6118:2023 (\citeyear{NOAB}) define sua determinação a partir da Equação 6.\bigskip
+
+\begin{equation}
+h_{fic} = \gamma \cdot \frac{2A_c}{u_{ar}}
+\end{equation}\bigskip
+
+Onde $h_{fic}$ é a espessura fictícia, $\gamma$ é o coeficiente da umidade relativa do ambiente, $A_c$ é a área da seção transversal da peça e $u_ar$ é a parte do perímetro externo da seção transversal da peça em contato com o ar. 
+
+O outro cálculo auxiliar que pode ser feito é o da idade fictícia, onde a NBR 6118:2023 (\citeyear{NOAB}) determina que caso o endurecimento do concreto for em um ambiente onde a temperatura do ambiente é de 20°C, considera-se a idade fictícia como $\alpha t_{ef}$, e nos demais casos onde não há cura a vapor, considera-se a Equação 7.\bigskip
+
+\begin{equation}
+t = \alpha \sum_i \frac{T_i + 10}{30} \Delta t_{ef,i}
+\end{equation}\bigskip
+
+Onde $t_{fic}$ é a idade fictícia, $\alpha$ é o coeficiente dependente da velocidade de endurecimento do cimento, $T_i$ é a temperatura média do ambiente e $\Delta t_{ef,i}$ é o período de dias a qual $T_i$ pode ser admitida constante.
+
+\subsubsection{Retração, Fluência e seu Efeito Conjunto no Concreto}
+
+\hspace{0.4cm}Dado as características do concreto, em ambientes com umidades diferentes e relativas ele sofre variações em suas dimensões, se contraindo ao secar, ou expandindo ao molhar. A retração ocorre justamente na perda de água sofrida pela pasta de cimento hidratada a medida que a umidade relativa do ambiente cai, e em estruturas protendidas a retração provoca a redução de alongamento da armadura e perda de protensão (Cholfe e Bonilha, \citeyear{CB}). Segundo a NBR 6118:2023 (\citeyear{NOAB}), a retração do concreto pode ser calculada a partir da Equação 8.\bigskip
+
+\begin{equation}
+\epsilon_{cs}(t, t_0) = e_{1s} \cdot e_{2s} \cdot [\beta_s(t) - \beta_s(t_0)]
+\end{equation}\bigskip
+
+Onde $\epsilon_{cs}$ é o valor da retração, $e_{1s}$ é o coeficiente dependente da umidade relativa do ambiente e da consistência do concreto, $e_{2s}$ é o coeficiente decorrente da espessura fictícia da peça, $t$ é a idade fictícia do concreto no instante considerado, $t_0$ é a idade fictícia do concreto no instante em que o efeito da retração na peça começa a ser considerado e $\beta_s$ é o coeficiente relativo à retração. 
+
+No continuo estado de tensão, a deformação do concreto se mantém ao longo do tempo, seu aumento sob tensão permanente chama-se deformação de fluência do concreto (Cholfe e Bonilha, \citeyear{CB}). Seu cálculo é especificado na NBR 6118:2023 (\citeyear{NOAB}) através da Equação 9.\bigskip
+
+\begin{equation}
+\epsilon_{cc} = \epsilon_{cca} \cdot \epsilon_{ccf} \cdot \epsilon_{ccd}
+\end{equation}\bigskip
+
+Onde $\epsilon_{cc}$ é a deformação por fluência do concreto, $\epsilon_{cca}$ é a deformação rápida e irreversível que ocorre durante as primeiras vinte e quatro horas após a aplicação da carga que a originou, $\epsilon_{ccf}$ é a deformação lenta irreversível e $\epsilon_{ccd}$ é a deformação lenta reversível. 
+
+Cholfe e Bonilha (\citeyear{CB}) expõem que apenas se convenciona a separação da retração e fluência, mas na verdade são aspectos que acontecem de maneira interativa e simultânea. Para o cálculo dessa ação conjunta, eles indicam a recomendação da CEB FIP 78, na Equação 10, derivada do método da tensão média.\bigskip
+
+\begin{equation}
+\Delta\sigma_{p,c+s}(t,t_0) = \frac{\epsilon_{cs}(t,t_0) \cdot E_P + \alpha_P \cdot \phi(t,t_0) \cdot (\sigma_{cP0} + \sigma_{c,g}) + \alpha_P \cdot \Sigma_i[\Delta \sigma_{c,gi} \cdot \phi(t,t_i)]}{1 - \alpha_P \cdot (\sigma_{cP0} / \sigma_{P0}) \cdot (1 + \frac{\phi(t,t_0)}{2})}
+\end{equation}\bigskip
+
+Onde $\Delta\sigma_{p,c+s}(t,t_0)$ é a perda de tensão da armadura protendida provocada pela retração e fluência do concreto no intervalo $(t,t_0)$, $\Delta\sigma_{c,gi}$ são as tensões na fibra da armadura protendida do concreto aplicadas nas idades $t_i$ sucessivas, $\epsilon_{cs}(t,t_0)$ é a deformação normal por retração do concreto no intervalo $(t,t_0)$, $E_p$ é o módulo de elasticidade do aço, $\phi(t,t_0)$ é o coeficiente de fluência no intervalo $(t,t_0)$, $\phi(t,t_i)$ são os coeficientes de fluência para os intervalos $(t,t_i)$, $\sigma_{cP0}$ é a tensão inicial na fibra da armadura protendida do concreto devido à protensão aplicada no instante $t_0$, $\sigma_{c,g}$ é a tensão na fibra da armadura protendida do concreto devido às ações permanentes mobilizadas na protensão no instante $t_0$, $\sigma_{cP0}$ é a tensão inicial na armadura protendida devido à protensão, $(t,t_0)$ é o intervalo de tempo (idades fictícias) no qual estão sendo avaliadas as perdas e $t_i$ são as idades fictícias de aplicação dos carregamentos.
+
+\subsubsection{Relaxação Pura e Relativa do Concreto}
+
+\hspace{0.4cm}A relaxação pode ser descrita como as perdas de tensões que ocorrem nos aços protendidos que sob tensão elevada, são ancorados com comprimentos constantes ou sofrem deformações constantes (Cholfe e Bonilha, \citeyear{CB}). A perda por relaxação pura, também chamada de relaxação do aço, tem sua intensidade determinada a partir da Equação 11, segundo a NBR 6118:2023 (\citeyear{NOAB}).\bigskip
+
+\begin{equation}
+\psi(t,t_0) = \frac{\Delta\sigma_{pr}(t,t_0)}{\sigma_{pi}}
+\end{equation}\bigskip
+
+Onde $\Delta\sigma_{pr}(t,t_0)$ é a perda de tensão por relaxação pura desde o instante $t_0$ do estiramento da armadura até o instante $t$ considerado, $\psi(t,t_0)$ é o coeficiente de intensidade de relaxação do aço e $\sigma_{pi}$ é a tensão no aço calculada após as perdas imediatas mais os efeitos de ações permanentes posteriores. 
+
+Cholfe e Bonilha (\citeyear{CB}) descrevem que a perda por relaxação pura é medida em laboratório, por outro lado, a perda por relaxação relativa que ocorre na estrutura, é encontrada através de processos de aproximação. Para este cálculo, eles indicam a Equação 12 recomendada pelo CEB FIP 78, que relaciona a relaxação pura com o efeito conjunto da retração e fluência no concreto.\bigskip
+
+\begin{equation}
+\Delta\sigma_{pr}(t,t_0)_{,rel} = \Delta\sigma_{pr}(t,t_0) \cdot [1 - 2 \cdot \frac{|\Delta\sigma_{p}(t,t_0)_{c+s}|}{\sigma_{pi}}]
+\end{equation}\bigskip
+
+Onde $\Delta\sigma_{pr}(t,t_0)_{,rel}$ é a perda de tensão por relaxação relativa, $\Delta\sigma_{pr}(t,t_0)$ é a perda de tensão por relaxação pura, $\Delta\sigma_{pr}(t,t_0)_{c+s}$ é a perda de tensão provocada pela retração e fluência do concreto e $\sigma_{pi}$ é a tensão no aço calculada após as perdas imediatas mais os efeitos de ações permanentes posteriores.
+
+\subsubsection{Métodos de Cálculo das Perdas Progressivas}
+
+\hspace{0.4cm}A perda de protensão progressiva pode ser encontrada por diferentes métodos de cálculo, que buscam unir os conceitos e equações apresentadas anteriormente. Dois desses métodos serão abordados no presente estudo, sendo um deles o processo simplificado para os casos de fases únicas de operação. Sobre ele, NBR 6118:2023 (\citeyear{NOAB}) diz que sua aplicação se dá mediante algumas condições satisfeitas. Para isso, a concretagem e a protensão do elemento estrutural devem ser realizadas em fases próximas, para que os efeitos recíprocos de uma sobre a outra possam ser desprezados. Além disso, Os cabos de protensão devem ter afastamentos pequenos em relação à altura da seção do elemento estrutural, para que seus efeitos sejam equivalentes aos de um único cabo na posição da resultante das forças. Com essas condições satisfeitas, a norma indica o cálculo pelo processo simplificado a partir da Equação 13.\bigskip
+
+\begin{equation}
+\Delta\sigma_{p}(t,t_0) = \frac{|\epsilon_{cs}(t,t_0)| \cdot E_p + \alpha_p(t) \cdot \sigma_{c,p0g} \cdot \phi(t,t_0) + \sigma_{p0} \cdot \chi(t,t_0)}{\chi_p + \chi_c \cdot \alpha_p \cdot \eta \cdot \rho_\rho}
+\end{equation}\bigskip
+
+Onde $\Delta\sigma_{p}(t,t_0)$ representa as perdas e deformações progressivas do concreto e do aço de protensão pelo processo simplificado, $\sigma_{c,p0g}$ é a tensão no concreto adjacente ao cabo resultante, provocada pelo efeito conjunto da protensão (compressão) após todas as perdas imediatas e pelo efeito da carga permanente mobilizada sendo positiva se de compressão, $\phi(t,t_0)$ é o coeficiente de fluência do concreto para protensão e carga permanente, $\sigma_{p0}$ é a tensão na armadura ativa após todas as perdas imediatas e sempre positiva por ser de tração, $\chi(t,t_0)$ é o coeficiente de fluência do aço, $\epsilon_{cs}(t,t_0)$ é a retração do concreto e $\rho_{p}$ é a taxa geométrica da armadura de protensão.
+
+A outra forma abordada no presente estudo para o cálculo das perdas de protensão progressiva é o método geral de cálculo. A NBR 6118:2023 (\citeyear{NOAB}) explica que quando as condições para aplicação do cálculo da perda de protensão progressiva pelo processo simplificado não forem satisfeitas, é possível aplicar o método geral. Para seu cálculo é possível utilizar a Equação 14, resumida e apresentada por Cholfe e Bonilha (\citeyear{CB}).
+
+\begin{equation}
+\Delta\sigma_{p,c+s+r}(t,t_0) = \Delta\sigma_{p,c+s}(t,t_0) + \Delta\sigma_{pr}(t,t_0)_{,rel}
+\end{equation}\bigskip
+
+Onde $\Delta\sigma_{p,c+s+r}(t,t_0)$ representa as perdas e deformações progressivas do concreto e do aço de protensão pelo método geral, $\Delta\sigma_{p,c+s}(t,t_0)$ é a perda de tensão da armadura protendida provocada pela retração e fluência do concreto e $\Delta\sigma_{pr}(t,t_0)_{,rel}$ é a perda de tensão por relaxação relativa.
+
+\newpage
