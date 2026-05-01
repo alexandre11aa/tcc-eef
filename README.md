@@ -5,7 +5,7 @@
 ***Curso:** Engenharia de Estruturas e Fundações*  
 ***Ano:** 2025*  
 ***Local:** Patos – PB*  
-***Tipo:** Trabalho de Conclusão de Curso*
+***Tipo:** Trabalho de Conclusão de Curso*  
 ***Título:** Especialista*
 
 ## 📚 Referência
